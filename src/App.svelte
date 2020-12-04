@@ -38,7 +38,8 @@
 
 	<Router {routes}/>
 
-	{{ name }} | current location is: {$location}
+	<hr>
+	{ name } | current location is: {$location}
 </main>
 
 <style>
