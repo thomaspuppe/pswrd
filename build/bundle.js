@@ -73,6 +73,10 @@ var app = (function () {
     function empty() {
         return text('');
     }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -410,6 +414,19 @@ var app = (function () {
     function detach_dev(node) {
         dispatch_dev('SvelteDOMRemove', { node });
         detach(node);
+    }
+    function listen_dev(node, event, handler, options, has_prevent_default, has_stop_propagation) {
+        const modifiers = options === true ? ['capture'] : options ? Array.from(Object.keys(options)) : [];
+        if (has_prevent_default)
+            modifiers.push('preventDefault');
+        if (has_stop_propagation)
+            modifiers.push('stopPropagation');
+        dispatch_dev('SvelteDOMAddEventListener', { node, event, handler, modifiers });
+        const dispose = listen(node, event, handler, options);
+        return () => {
+            dispatch_dev('SvelteDOMRemoveEventListener', { node, event, handler, modifiers });
+            dispose();
+        };
     }
     function attr_dev(node, attribute, value) {
         attr(node, attribute, value);
@@ -1783,24 +1800,47 @@ var app = (function () {
 
     function create_fragment$3(ctx) {
     	let p;
+    	let t0;
+    	let t1;
+    	let button;
+    	let mounted;
+    	let dispose;
 
     	const block = {
     		c: function create() {
     			p = element("p");
-    			p.textContent = "DICE DICE DICE DICE DICE DICE DICE DICE DICE DICE DICE DICE DICE DICE DICE DICE";
-    			add_location(p, file$2, 0, 0, 0);
+    			t0 = text(/*number*/ ctx[0]);
+    			t1 = space();
+    			button = element("button");
+    			button.textContent = "again";
+    			add_location(p, file$2, 7, 0, 145);
+    			add_location(button, file$2, 8, 0, 161);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
+    			append_dev(p, t0);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, button, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*handleClick*/ ctx[1], false, false, false);
+    				mounted = true;
+    			}
     		},
-    		p: noop,
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*number*/ 1) set_data_dev(t0, /*number*/ ctx[0]);
+    		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(p);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -1815,16 +1855,32 @@ var app = (function () {
     	return block;
     }
 
-    function instance$3($$self, $$props) {
+    function instance$3($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Dice", slots, []);
+    	let number = Math.floor(Math.random() * 6 + 1);
+
+    	function handleClick() {
+    		$$invalidate(0, number = Math.floor(Math.random() * 6 + 1));
+    	}
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Dice> was created with unknown prop '${key}'`);
     	});
 
-    	return [];
+    	$$self.$capture_state = () => ({ number, handleClick });
+
+    	$$self.$inject_state = $$props => {
+    		if ("number" in $$props) $$invalidate(0, number = $$props.number);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [number, handleClick];
     }
 
     class Dice extends SvelteComponentDev {
@@ -2097,10 +2153,11 @@ var app = (function () {
     	let t9;
     	let router;
     	let t10;
-    	let t11_value = { name: /*name*/ ctx[0] } + "";
+    	let hr;
     	let t11;
     	let t12;
     	let t13;
+    	let t14;
     	let current;
     	let mounted;
     	let dispose;
@@ -2131,9 +2188,11 @@ var app = (function () {
     			t9 = space();
     			create_component(router.$$.fragment);
     			t10 = space();
-    			t11 = text(t11_value);
-    			t12 = text(" | current location is: ");
-    			t13 = text(/*$location*/ ctx[1]);
+    			hr = element("hr");
+    			t11 = space();
+    			t12 = text(/*name*/ ctx[0]);
+    			t13 = text(" | current location is: ");
+    			t14 = text(/*$location*/ ctx[1]);
     			attr_dev(a0, "href", "/horse");
     			attr_dev(a0, "class", "svelte-kjvok4");
     			add_location(a0, file$6, 30, 2, 681);
@@ -2149,6 +2208,7 @@ var app = (function () {
     			attr_dev(nav, "class", "tabs svelte-kjvok4");
     			add_location(nav, file$6, 29, 1, 660);
     			add_location(h1, file$6, 36, 1, 885);
+    			add_location(hr, file$6, 40, 1, 936);
     			attr_dev(main, "class", "svelte-kjvok4");
     			add_location(main, file$6, 27, 0, 651);
     		},
@@ -2170,9 +2230,11 @@ var app = (function () {
     			append_dev(main, t9);
     			mount_component(router, main, null);
     			append_dev(main, t10);
+    			append_dev(main, hr);
     			append_dev(main, t11);
     			append_dev(main, t12);
     			append_dev(main, t13);
+    			append_dev(main, t14);
     			current = true;
 
     			if (!mounted) {
@@ -2191,8 +2253,8 @@ var app = (function () {
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if ((!current || dirty & /*name*/ 1) && t11_value !== (t11_value = { name: /*name*/ ctx[0] } + "")) set_data_dev(t11, t11_value);
-    			if (!current || dirty & /*$location*/ 2) set_data_dev(t13, /*$location*/ ctx[1]);
+    			if (!current || dirty & /*name*/ 1) set_data_dev(t12, /*name*/ ctx[0]);
+    			if (!current || dirty & /*$location*/ 2) set_data_dev(t14, /*$location*/ ctx[1]);
     		},
     		i: function intro(local) {
     			if (current) return;
