@@ -6,8 +6,8 @@
 	import Home from './modules/Home.svelte'
 	import Horse from './modules/Horse.svelte'
 	import Dice from './modules/Dice.svelte'
-	import Easy from './modules/Easy.svelte'
-	import Hard from './modules/Hard.svelte'
+	import Classic from './modules/Classic.svelte'
+	import Hash from './modules/Hash.svelte'
 	import NotFound from './modules/NotFound.svelte'
 
 	const routes = {
@@ -15,8 +15,8 @@
 		'/': Home,
 		'/horse': Horse,
 		'/dice': Dice,
-		'/easy': Easy,
-		'/hard': Hard,
+		'/classic': Classic,
+		'/hash': Hash,
 		// Catch-all
 		// This is optional, but if present it must be the last
 		'*': NotFound,
@@ -28,10 +28,11 @@
 <main>
 
 	<nav class="tabs">
-		<a href="/horse" use:link use:active>🐴 Words</a>
-		<a href="/dice" use:link use:active>🎲 Dice</a>
-		<a href="/easy" use:link use:active>Easy</a>
-		<a href="/hard" use:link use:active>Hard</a>
+		<a href="/horse" use:link use:active>🐴&emsp;Words</a>
+		<a href="/dice" use:link use:active>🎲&emsp;Dice</a>
+		
+		<a href="/hash" use:link use:active>🎏&emsp;Hash</a>
+		<a href="/classic" use:link use:active>🤬&emsp;Classic</a>
 	</nav>
 
 	<h1>Password Generator</h1>

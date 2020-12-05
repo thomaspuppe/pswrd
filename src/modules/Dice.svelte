@@ -6,4 +6,6 @@
 	}
 </script>
 <p>{number}</p>
-<button on:click={handleClick}>again</button>
+
+<!-- TODO: das zentral reingeben, oder in App.svelte haben, oder als Subcomponent laden? -->
+<button on:click={handleClick}>🔁&emsp;new password</button>

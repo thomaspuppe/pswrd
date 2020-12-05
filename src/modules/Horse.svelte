@@ -35,11 +35,13 @@
 
 <div>
   <h1>Correct Horse Battery Staple</h1>
+
+  <!-- {!character ? 'Loading ...' : character.name} -->
   {#if password}
     <p>{ password }</p>
   {:else}
     <p>loading...</p>
   {/if}
 
-  <!-- TODO: BIG REPEAT BUTTON -->
+  <!-- TODO: BIG REPEAT BUTTON like in Dice-->
 </div>
