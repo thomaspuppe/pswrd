@@ -103,3 +103,20 @@ Then, from within your project folder:
 npm run build
 surge public my-project.surge.sh
 ```
+
+
+# Links
+
+## Wordlists
+http://www.gwicks.net/dictionaries.htm
+
+
+## Routing
+https://github.com/mefechoel/svelte-navigator/tree/main/example/lazy-loading
+https://github.com/mefechoel/svelte-navigator/tree/main/example/basic-client-side
+
+
+
+# TODO 
+
+- Autoformat für meinen Code. Prettier, zB? 
