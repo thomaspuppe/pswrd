@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import PasswordStage from './blocks/PasswordStage.svelte'
 
   let uppercaseEachWord = false;
   // TODO: Reactive value, aber ohne dass ich alle ändernden Parameter reinreichen muss.
@@ -62,7 +63,7 @@
 
   <!-- {!character ? 'Loading ...' : character.name} -->
   {#if password}
-    <p>{ password }</p>
+    <PasswordStage password={ password } />
   {:else}
     <p>loading...</p>
   {/if}

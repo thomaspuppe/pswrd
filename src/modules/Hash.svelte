@@ -1,4 +1,6 @@
 <script>
+    import PasswordStage from './blocks/PasswordStage.svelte'
+
     let domain = '';
     let secret = '';
 
@@ -37,11 +39,14 @@
     
     <label>Domain: <input bind:value={domain}></label>
     <label>Secret: <input bind:value={secret}></label>
+    
     <hr>
 
     {#await password then value}
-        <p>the hex(value) is { hex(value) }</p>
-        <p>the encode64(value) is { encode64(value) }</p>
+        <p>the hex(value) is</p>
+        <PasswordStage password={ hex(value) } />
+        <p>the encode64(value) is</p>
+        <PasswordStage password={ encode64(value) } />
     {/await}
     
   </div>
