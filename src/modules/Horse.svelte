@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import PasswordStage from './blocks/PasswordStage.svelte'
+  import PasswordStage from "./blocks/PasswordStage.svelte";
 
   let uppercaseEachWord = false;
   // TODO: Reactive value, aber ohne dass ich alle ändernden Parameter reinreichen muss.
@@ -8,18 +8,18 @@
   // TODO: Das Passwort soll bei manchen Parametern geändert werden (Länge, Zahl),
   // aber nicht bei allen (Uppercase, Trennzeichen)
   $: password = calculatePassword(uppercaseEachWord);
-  
+
   let allWords;
 
   async function loadAllWords() {
-    if ( allWords ) {
+    if (allWords) {
       return allWords;
     }
     // TODO: is this loaded again after every nav change?
-    const response = await fetch(`/words_comma.txt`)
-    const responseString = await response.text()
+    const response = await fetch(`./words_comma.txt`);
+    const responseString = await response.text();
     // TODO: what is fastest? JSON array inside the file? splitting here?
-    allWords = responseString.split(',')
+    allWords = responseString.split(",");
   }
 
   // https://stackoverflow.com/questions/19269545/how-to-get-a-number-of-random-elements-from-an-array
@@ -34,8 +34,9 @@
       // TODO: die taken Sache kann ich doch löschen oder reverten?
       var x = Math.floor(Math.random() * len);
       currentWord = allWords[x in taken ? taken[x] : x];
-      if(uppercaseEachWord) {
-        currentWord = currentWord.charAt(0).toUpperCase() + currentWord.slice(1)
+      if (uppercaseEachWord) {
+        currentWord =
+          currentWord.charAt(0).toUpperCase() + currentWord.slice(1);
       }
       result[n] = currentWord;
       //console.log('result', result);
@@ -46,15 +47,15 @@
   }
 
   async function calculatePassword(uppercaseEachWord) {
-      await loadAllWords();
-      // TODO: input elements for word length, uppercase, ...
-      let words = getRandomWordsFromAllWords(4, uppercaseEachWord)
-      words.push(Math.ceil(Math.random()*10))
-      password = words.join('-')
+    await loadAllWords();
+    // TODO: input elements for word length, uppercase, ...
+    let words = getRandomWordsFromAllWords(4, uppercaseEachWord);
+    words.push(Math.ceil(Math.random() * 10));
+    password = words.join("-");
   }
 
   onMount(async () => {
-    await calculatePassword(uppercaseEachWord)
+    await calculatePassword(uppercaseEachWord);
   });
 </script>
 
@@ -63,13 +64,13 @@
 
   <!-- {!character ? 'Loading ...' : character.name} -->
   {#if password}
-    <PasswordStage password={ password } />
+    <PasswordStage {password} />
   {:else}
     <p>loading...</p>
   {/if}
 
   <label>
-    <input type=checkbox bind:checked={uppercaseEachWord}>
+    <input type="checkbox" bind:checked={uppercaseEachWord} />
     Begin each word with an uppercase character.
   </label>
   <!-- TODO: BIG REPEAT BUTTON like in Dice-->
